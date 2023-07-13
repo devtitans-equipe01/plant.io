@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "author": "DevTITANS 03 - Equipe 01",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": -105.33, "left": -203.34, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -101.83, "left": -0.73, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+    [ "pot1:VCC", "esp:3V3", "red", [ "v0" ] ],
+    [ "esp:GND.1", "pot1:GND", "black", [ "h0" ] ],
+    [ "pot1:SIG", "esp:D34", "green", [ "v37.4", "h-101.6", "v-129.33", "h-169.33", "v74" ] ]
+  ],
+  "dependencies": {}
+}
