@@ -15,9 +15,9 @@ static int usb_probe(struct usb_interface *ifce, const struct usb_device_id *id)
 static void usb_disconnect(struct usb_interface *ifce);
 // Envia um comando via USB e espera/retorna a resposta do dispositivo (int)
 static int usb_send_cmd(char *cmd, int param);
-// Executado quando o arquivo /sys/kernel/plantio/{led, ldr, threshold} é lido (e.g., cat /sys/kernel/plantio/led)
+// Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é lido (e.g., cat /sys/kernel/plantio/sm)
 static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff);
-// Executado quando o arquivo /sys/kernel/plantio/{led, ldr, threshold} é escrito (e.g., echo "100" | sudo tee -a /sys/kernel/plantio/led)
+// Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é escrito (e.g., echo "1000" | sudo tee -a /sys/kernel/plantio/sm)
 static ssize_t attr_store(struct kobject *sys_obj, struct kobj_attribute *attr, const char *buff, size_t count);
 
 static char recv_line[MAX_RECV_LINE];        // Armazena dados vindos da USB até receber um caractere de nova linha '\n'
@@ -96,7 +96,7 @@ static int usb_send_cmd(char *cmd, int param)
     int retries = 10;                  // Tenta algumas vezes receber uma resposta da USB. Depois desiste.
     char resp_expected[MAX_RECV_LINE]; // Resposta esperada do comando
     char *resp_pos;                    // Posição na linha lida que contém o número retornado pelo dispositivo
-    long resp_number = -1;             // Número retornado pelo dispositivo (e.g., valor do led, valor do ldr)
+    long resp_number = -1;             // Número retornado pelo dispositivo (e.g., valor do sm, valor do st)
 
     printk(KERN_INFO "Plantio: Enviando comando: %s\n", cmd);
 
@@ -161,7 +161,7 @@ static int usb_send_cmd(char *cmd, int param)
     return -1; // Não recebi a resposta esperada do dispositivo
 }
 
-// Executado quando o arquivo /sys/kernel/plantio/{led, ldr, threshold} é lido (e.g., cat /sys/kernel/plantio/led)
+// Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é lido (e.g., cat /sys/kernel/plantio/sm)
 static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff)
 {
     int value;
@@ -176,15 +176,16 @@ static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, c
     else if (!strcmp(attr_name, "am"))
         value = usb_send_cmd("GET_AM", -1);
     else if (!strcmp(attr_name, "at"))
-        value = usb_send_cmd("GET_AT", -1);            
-    else (!strcmp(attr_name, "al"))
-        value = usb_send_cmd("GET_AL", -1);
+        value = usb_send_cmd("GET_AT", -1);
+    else
+        (!strcmp(attr_name, "al"))
+            value = usb_send_cmd("GET_AL", -1);
 
-    sprintf(buff, "%d\n", value); // Cria a mensagem com o valor do led, ldr ou threshold
+    sprintf(buff, "%d\n", value); // Cria a mensagem com o valor do sm, st ou am, etc...
     return strlen(buff);
 }
 
-// Executado quando o arquivo /sys/kernel/plantio/{led, ldr, threshold} é escrito (e.g., echo "100" | sudo tee -a /sys/kernel/plantio/led)
+// Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é escrito (e.g., echo "1000" | sudo tee -a /sys/kernel/plantio/sm)
 static ssize_t attr_store(struct kobject *sys_obj, struct kobj_attribute *attr, const char *buff, size_t count)
 {
     long ret, value;
