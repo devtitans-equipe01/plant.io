@@ -3,6 +3,8 @@ const int SOIL_MOISTURE_SENSOR_PIN = 34;
 void setup() {
   Serial.begin(115200);
   pinMode(SOIL_MOISTURE_SENSOR_PIN, INPUT);
+
+  Serial.printf("DevTITANS Plant.io initialialized.\n");
 }
 
 void loop() {
