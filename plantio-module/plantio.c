@@ -33,7 +33,7 @@ static struct kobj_attribute am_attribute = __ATTR(am, S_IRUGO | S_IWUSR, attr_s
 static struct kobj_attribute at_attribute = __ATTR(at, S_IRUGO | S_IWUSR, attr_show, attr_store);
 static struct kobj_attribute al_attribute = __ATTR(al, S_IRUGO | S_IWUSR, attr_show, attr_store);
 
-static struct attribute *attrs[] = {&sm_attribute, &st_attribute, &am_attribute, &at_attribute, &al_attribute, NULL};
+static struct attribute *attrs[] = {&sm_attribute.attr, &st_attribute.attr, &am_attribute.attr, &at_attribute.attr, &al_attribute.attr, NULL};
 static struct attribute_group attr_group = {.attrs = attrs};
 static struct kobject *sys_obj;
 
@@ -87,7 +87,7 @@ static void usb_disconnect(struct usb_interface *interface)
 }
 
 // Envia um comando via USB, espera e retorna a resposta do dispositivo (convertido para int)
-// Exemplo de Comando:  SET_SMI 10000=
+// Exemplo de Comando:  SET_SMI 10000
 // Exemplo de Resposta: RES SET_SMI 1
 static int usb_send_cmd(char *cmd, int param)
 {
