@@ -187,7 +187,7 @@ static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, c
         value = usb_send_cmd("GET_ATI", -1);
     else if (!strcmp(attr_name, "al"))
         value = usb_send_cmd("GET_AL", -1);
-    else if (!strcmp(attr_name, "ali"))
+    else
         value = usb_send_cmd("GET_ALI", -1);
 
     // Cria a mensagem com o valor do sm, st ou am, etc...
