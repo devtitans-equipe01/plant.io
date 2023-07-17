@@ -171,17 +171,27 @@ static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, c
 
     if (!strcmp(attr_name, "sm"))
         value = usb_send_cmd("GET_SM", -1);
+    else if (!strcmp(attr_name, "smi"))
+        value = usb_send_cmd("GET_SMI", -1);
     else if (!strcmp(attr_name, "st"))
         value = usb_send_cmd("GET_ST", -1);
+    else if (!strcmp(attr_name, "sti"))
+        value = usb_send_cmd("GET_STI", -1);
     else if (!strcmp(attr_name, "am"))
         value = usb_send_cmd("GET_AM", -1);
+    else if (!strcmp(attr_name, "ami"))
+        value = usb_send_cmd("GET_AMI", -1);
     else if (!strcmp(attr_name, "at"))
         value = usb_send_cmd("GET_AT", -1);
-    else
-        (!strcmp(attr_name, "al"))
-            value = usb_send_cmd("GET_AL", -1);
+    else if (!strcmp(attr_name, "ati"))
+        value = usb_send_cmd("GET_ATI", -1);
+    else if (!strcmp(attr_name, "al"))
+        value = usb_send_cmd("GET_AL", -1);
+    else if (!strcmp(attr_name, "ali"))
+        value = usb_send_cmd("GET_ALI", -1);
 
-    sprintf(buff, "%d\n", value); // Cria a mensagem com o valor do sm, st ou am, etc...
+    // Cria a mensagem com o valor do sm, st ou am, etc...
+    sprintf(buff, "%d\n", value);
     return strlen(buff);
 }
 
@@ -201,15 +211,15 @@ static ssize_t attr_store(struct kobject *sys_obj, struct kobj_attribute *attr, 
     printk(KERN_INFO "Plantio: Setando %s para %ld ...\n", attr_name, value);
 
     if (!strcmp(attr_name, "smi"))
-        ret = usb_send_cmd("SET_SM_INTERVAL", value);
+        ret = usb_send_cmd("SET_SMI", value);
     else if (!strcmp(attr_name, "sti"))
-        ret = usb_send_cmd("SET_ST_INTERVAL", value);
+        ret = usb_send_cmd("SET_STI", value);
     else if (!strcmp(attr_name, "ami"))
-        ret = usb_send_cmd("SET_AM_INTERVAL", value);
+        ret = usb_send_cmd("SET_AMI", value);
     else if (!strcmp(attr_name, "ati"))
-        ret = usb_send_cmd("SET_AT_INTERVAL", value);
+        ret = usb_send_cmd("SET_ATI", value);
     else if (!strcmp(attr_name, "ali"))
-        ret = usb_send_cmd("SET_AL_INTERVAL", value);
+        ret = usb_send_cmd("SET_ALI", value);
     else
     {
         printk(KERN_ALERT "Plantio: os dados dos sensores sao apenas para leitura.\n");
