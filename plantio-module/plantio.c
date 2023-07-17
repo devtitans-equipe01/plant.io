@@ -87,8 +87,8 @@ static void usb_disconnect(struct usb_interface *interface)
 }
 
 // Envia um comando via USB, espera e retorna a resposta do dispositivo (convertido para int)
-// Exemplo de Comando:  SET_LED 80
-// Exemplo de Resposta: RES SET_LED 1
+// Exemplo de Comando:  SET_SMI 10000=
+// Exemplo de Resposta: RES SET_SMI 1
 static int usb_send_cmd(char *cmd, int param)
 {
     int recv_size = 0; // Quantidade de caracteres no recv_line
