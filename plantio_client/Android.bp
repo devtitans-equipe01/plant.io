@@ -1,0 +1,14 @@
+cc_binary {
+	name:		"plantio_client",
+	srcs:		[ "plantio_client.cpp" ],
+	shared_libs:	[ "plantio_lib" ],
+	required:	[ "plantio_lib "],
+	
+	vendor: true,
+
+
+
+
+
+
+}
