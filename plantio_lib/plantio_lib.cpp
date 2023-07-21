@@ -65,7 +65,7 @@ int Plantio::getSoilMoisture() {
   return this->readFileValue("sm");
 }
 
-int Plantio::getSoilMoistureInterval() {
+long Plantio::getSoilMoistureInterval() {
   return this->readFileValue("smi");
 }
 
@@ -77,7 +77,7 @@ int Plantio::getSoilTemperature() {
   return this->readFileValue("st");
 }
 
-int Plantio::getSoilTemperatureInterval() {
+long Plantio::getSoilTemperatureInterval() {
   return this->readFileValue("sti");
 }
 
@@ -89,7 +89,7 @@ int Plantio::getAmbientMoisture() {
   return this->readFileValue("am");
 }
 
-int Plantio::getAmbientMoistureInterval() {
+long Plantio::getAmbientMoistureInterval() {
   return this->readFileValue("ami");
 }
 
@@ -101,7 +101,7 @@ int Plantio::getAmbientTemperature() {
 return this->readFileValue("at");
 }
 
-int Plantio::getAmbientTemperatureInterval() {
+long Plantio::getAmbientTemperatureInterval() {
   return this->readFileValue("ati");
 }
 
@@ -113,7 +113,7 @@ int Plantio::getAmbientLight() {
   return this->readFileValue("al");
 }
 
-int Plantio::getAmbientLightInterval() {
+long Plantio::getAmbientLightInterval() {
   return this->readFileValue("ali");
 }
 

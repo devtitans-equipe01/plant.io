@@ -28,23 +28,23 @@ class Plantio {
         int connect();
 
         int getSoilMoisture();
-        int getSoilMoistureInterval();
+        long getSoilMoistureInterval();
         bool setSoilMoistureInterval(long milliseconds);
         
         int getSoilTemperature();
-        int getSoilTemperatureInterval();
+        long getSoilTemperatureInterval();
         bool setSoilTemperatureInterval(long milliseconds);
 
         int getAmbientMoisture();
-        int getAmbientMoistureInterval();
+        long getAmbientMoistureInterval();
         bool setAmbientMoistureInterval(long milliseconds);
 
         int getAmbientTemperature();
-        int getAmbientTemperatureInterval();
+        long getAmbientTemperatureInterval();
         bool setAmbientTemperatureInterval(long milliseconds);
 
         int getAmbientLight();
-        int getAmbientLightInterval();
+        long getAmbientLightInterval();
         bool setAmbientLightInterval(long milliseconds);
 
     private:
