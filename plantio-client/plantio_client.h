@@ -1,4 +1,4 @@
-#pragma once                      // Inclui esse cabeçalho apenas uma vez
+#pragma once // Inclui esse cabeçalho apenas uma vez
 
 #include <iostream>               // std::cout (char-out) e std::endl (end-line)
 #include <string.h>               // Função strcmp

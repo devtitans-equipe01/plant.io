@@ -50,7 +50,7 @@ bool Plantio::writeFileValue(string file, long value) {
 
         // Verifica se o arquivo foi aberto com sucesso
         if (file.is_open()) {
-            // Escreve o ledValue no arquivo
+            // Escreve o smValue no arquivo
             file << value;
             file.close();
             return true;
@@ -66,7 +66,7 @@ float Plantio::getSoilMoisture() {
 }
 
 long Plantio::getSoilMoistureInterval() {
-  return this->readFileValue("smi");
+  return (long)this->readFileValue("smi");
 }
 
 bool Plantio::setSoilMoistureInterval(long milliseconds) {
@@ -78,7 +78,7 @@ float Plantio::getSoilTemperature() {
 }
 
 long Plantio::getSoilTemperatureInterval() {
-  return this->readFileValue("sti");
+  return (long)this->readFileValue("sti");
 }
 
 bool Plantio::setSoilTemperatureInterval(long milliseconds) {
@@ -90,7 +90,7 @@ float Plantio::getAmbientMoisture() {
 }
 
 long Plantio::getAmbientMoistureInterval() {
-  return this->readFileValue("ami");
+  return (long)this->readFileValue("ami");
 }
 
 bool Plantio::setAmbientMoistureInterval(long milliseconds) {
@@ -102,7 +102,7 @@ return this->readFileValue("at");
 }
 
 long Plantio::getAmbientTemperatureInterval() {
-  return this->readFileValue("ati");
+  return (long)this->readFileValue("ati");
 }
 
 bool Plantio::setAmbientTemperatureInterval(long milliseconds) {
@@ -114,7 +114,7 @@ float Plantio::getAmbientLight() {
 }
 
 long Plantio::getAmbientLightInterval() {
-  return this->readFileValue("ali");
+  return (long)this->readFileValue("ali");
 }
 
 bool Plantio::setAmbientLightInterval(long milliseconds) {

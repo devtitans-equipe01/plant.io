@@ -49,7 +49,7 @@ void PlantioClient::start(int argc, char **argv) {
         cout << "Valor do ALI: " << plantio.getAmbientLightInterval() << endl;
     }
     else if (!strcmp(argv[1], "set-smi")) {
-        float smiValue = atol(argv[2]);
+        long smiValue = atol(argv[2]);
         if (plantio.setSoilMoistureInterval(smiValue))
             cout << "Valor do SMI setado para " << smiValue << endl;
         else
