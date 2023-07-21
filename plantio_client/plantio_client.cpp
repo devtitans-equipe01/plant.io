@@ -49,35 +49,35 @@ void PlantioClient::start(int argc, char **argv) {
         cout << "Valor do ALI: " << plantio.getAmbientLightInterval() << endl;
     }
     else if (!strcmp(argv[1], "set-smi")) {
-        long smiValue = atol(argv[2]);
+        int smiValue = atoi(argv[2]);
         if (plantio.setSoilMoistureInterval(smiValue))
             cout << "Valor do SMI setado para " << smiValue << endl;
         else
             cout << "Erro ao setar valor do SMI para " << smiValue << endl;
     }
     else if (!strcmp(argv[1], "set-sti")) {
-        long stiValue = atol(argv[2]);
+        int stiValue = atoi(argv[2]);
         if (plantio.setSoilTemperatureInterval(stiValue))
             cout << "Valor do STI setado para " << stiValue << endl;
         else
             cout << "Erro ao setar valor do STI para " << stiValue << endl;
     }
     else if (!strcmp(argv[1], "set-ami")) {
-        long amiValue = atol(argv[2]);
+        int amiValue = atoi(argv[2]);
         if (plantio.setAmbientMoistureInterval(amiValue))
             cout << "Valor do AMI setado para " << amiValue << endl;
         else
             cout << "Erro ao setar valor do AMI para " << amiValue << endl;
     }
     else if (!strcmp(argv[1], "set-ati")) {
-        long atiValue = atol(argv[2]);
+        int atiValue = atoi(argv[2]);
         if (plantio.setAmbientTemperatureInterval(atiValue))
             cout << "Valor do ATI setado para " << atiValue << endl;
         else
             cout << "Erro ao setar valor do ATI para " << atiValue << endl;
     }
     else if (!strcmp(argv[1], "set-ali")) {
-        long aliValue = atol(argv[2]);
+        int aliValue = atoi(argv[2]);
         if (plantio.setAmbientLightInterval(aliValue))
             cout << "Valor do ALI setado para " << aliValue << endl;
         else

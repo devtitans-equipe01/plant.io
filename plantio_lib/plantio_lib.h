@@ -28,28 +28,28 @@ class Plantio {
         int connect();
 
         int getSoilMoisture();
-        long getSoilMoistureInterval();
-        bool setSoilMoistureInterval(long milliseconds);
+        int getSoilMoistureInterval();
+        bool setSoilMoistureInterval(int milliseconds);
         
         int getSoilTemperature();
-        long getSoilTemperatureInterval();
-        bool setSoilTemperatureInterval(long milliseconds);
+        int getSoilTemperatureInterval();
+        bool setSoilTemperatureInterval(int milliseconds);
 
         int getAmbientMoisture();
-        long getAmbientMoistureInterval();
-        bool setAmbientMoistureInterval(long milliseconds);
+        int getAmbientMoistureInterval();
+        bool setAmbientMoistureInterval(int milliseconds);
 
         int getAmbientTemperature();
-        long getAmbientTemperatureInterval();
-        bool setAmbientTemperatureInterval(long milliseconds);
+        int getAmbientTemperatureInterval();
+        bool setAmbientTemperatureInterval(int milliseconds);
 
         int getAmbientLight();
-        long getAmbientLightInterval();
-        bool setAmbientLightInterval(long milliseconds);
+        int getAmbientLightInterval();
+        bool setAmbientLightInterval(int milliseconds);
 
     private:
         int readFileValue(string file);
-        bool writeFileValue(string file, long value);
+        bool writeFileValue(string file, int value);
 };
 
 } // namespace

@@ -39,7 +39,7 @@ int Plantio::readFileValue(string file) {
     return -1;
 }
 
-bool Plantio::writeFileValue(string file, long value) {
+bool Plantio::writeFileValue(string file, int value) {
     int connected = this->connect();
 
     // Conectado. Vamos solicitar o valor ao dispositivo
@@ -65,11 +65,11 @@ int Plantio::getSoilMoisture() {
   return this->readFileValue("sm");
 }
 
-long Plantio::getSoilMoistureInterval() {
+int Plantio::getSoilMoistureInterval() {
   return this->readFileValue("smi");
 }
 
-bool Plantio::setSoilMoistureInterval(long milliseconds) {
+bool Plantio::setSoilMoistureInterval(int milliseconds) {
   return this->writeFileValue("smi", milliseconds);
 }
 
@@ -77,11 +77,11 @@ int Plantio::getSoilTemperature() {
   return this->readFileValue("st");
 }
 
-long Plantio::getSoilTemperatureInterval() {
+int Plantio::getSoilTemperatureInterval() {
   return this->readFileValue("sti");
 }
 
-bool Plantio::setSoilTemperatureInterval(long milliseconds) {
+bool Plantio::setSoilTemperatureInterval(int milliseconds) {
   return this->writeFileValue("sti", milliseconds);
 }
 
@@ -89,11 +89,11 @@ int Plantio::getAmbientMoisture() {
   return this->readFileValue("am");
 }
 
-long Plantio::getAmbientMoistureInterval() {
+int Plantio::getAmbientMoistureInterval() {
   return this->readFileValue("ami");
 }
 
-bool Plantio::setAmbientMoistureInterval(long milliseconds) {
+bool Plantio::setAmbientMoistureInterval(int milliseconds) {
   return this->writeFileValue("ami", milliseconds);
 }
 
@@ -101,11 +101,11 @@ int Plantio::getAmbientTemperature() {
 return this->readFileValue("at");
 }
 
-long Plantio::getAmbientTemperatureInterval() {
+int Plantio::getAmbientTemperatureInterval() {
   return this->readFileValue("ati");
 }
 
-bool Plantio::setAmbientTemperatureInterval(long milliseconds) {
+bool Plantio::setAmbientTemperatureInterval(int milliseconds) {
   return this->writeFileValue("ati", milliseconds);
 }
 
@@ -113,11 +113,11 @@ int Plantio::getAmbientLight() {
   return this->readFileValue("al");
 }
 
-long Plantio::getAmbientLightInterval() {
+int Plantio::getAmbientLightInterval() {
   return this->readFileValue("ali");
 }
 
-bool Plantio::setAmbientLightInterval(long milliseconds) {
+bool Plantio::setAmbientLightInterval(int milliseconds) {
   return this->writeFileValue("ali", milliseconds);
 }
 
