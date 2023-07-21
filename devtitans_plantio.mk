@@ -7,8 +7,5 @@ PRODUCT_DEVICE := plantio
 PRODUCT_BRAND := PlantioBrand
 PRODUCT_MODEL := PlantioModel
 
-
-
-
-PRODUCT_PACKAGES += \
-	plantio_client		    
+PRODUCT_PACKAGES +=  \
+	plantio_client
