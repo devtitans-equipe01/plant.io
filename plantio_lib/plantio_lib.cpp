@@ -16,12 +16,12 @@ int Plantio::connect() {
     else return 0;
 }
 
-float Plantio::readFileValue(string file) {
+int Plantio::readFileValue(string file) {
     int connected = this->connect();
 
     // Conectado. Vamos solicitar o valor ao dispositivo
     if (connected == 1) {
-        float value;
+        int value;
         string filename = string("/sys/kernel/plantio/") + file;
         // Abre o arquivo do módulo do kernel
         ifstream file(filename);
@@ -36,7 +36,7 @@ float Plantio::readFileValue(string file) {
     }
 
     // Se chegou aqui, não foi possível conectar ou se comunicar com o dispositivo
-    return -1.0;
+    return -1;
 }
 
 bool Plantio::writeFileValue(string file, long value) {
@@ -61,60 +61,60 @@ bool Plantio::writeFileValue(string file, long value) {
     return false;
 }
 
-float Plantio::getSoilMoisture() {
+int Plantio::getSoilMoisture() {
   return this->readFileValue("sm");
 }
 
-long Plantio::getSoilMoistureInterval() {
-  return (long)this->readFileValue("smi");
+int Plantio::getSoilMoistureInterval() {
+  return this->readFileValue("smi");
 }
 
 bool Plantio::setSoilMoistureInterval(long milliseconds) {
   return this->writeFileValue("smi", milliseconds);
 }
 
-float Plantio::getSoilTemperature() {
+int Plantio::getSoilTemperature() {
   return this->readFileValue("st");
 }
 
-long Plantio::getSoilTemperatureInterval() {
-  return (long)this->readFileValue("sti");
+int Plantio::getSoilTemperatureInterval() {
+  return this->readFileValue("sti");
 }
 
 bool Plantio::setSoilTemperatureInterval(long milliseconds) {
   return this->writeFileValue("sti", milliseconds);
 }
 
-float Plantio::getAmbientMoisture() {
+int Plantio::getAmbientMoisture() {
   return this->readFileValue("am");
 }
 
-long Plantio::getAmbientMoistureInterval() {
-  return (long)this->readFileValue("ami");
+int Plantio::getAmbientMoistureInterval() {
+  return this->readFileValue("ami");
 }
 
 bool Plantio::setAmbientMoistureInterval(long milliseconds) {
   return this->writeFileValue("ami", milliseconds);
 }
 
-float Plantio::getAmbientTemperature() {
+int Plantio::getAmbientTemperature() {
 return this->readFileValue("at");
 }
 
-long Plantio::getAmbientTemperatureInterval() {
-  return (long)this->readFileValue("ati");
+int Plantio::getAmbientTemperatureInterval() {
+  return this->readFileValue("ati");
 }
 
 bool Plantio::setAmbientTemperatureInterval(long milliseconds) {
   return this->writeFileValue("ati", milliseconds);
 }
 
-float Plantio::getAmbientLight() {
+int Plantio::getAmbientLight() {
   return this->readFileValue("al");
 }
 
-long Plantio::getAmbientLightInterval() {
-  return (long)this->readFileValue("ali");
+int Plantio::getAmbientLightInterval() {
+  return this->readFileValue("ali");
 }
 
 bool Plantio::setAmbientLightInterval(long milliseconds) {
