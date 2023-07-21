@@ -25,7 +25,7 @@ DallasTemperature sensors(&oneWire);
 int pool_delay = 200;
 
 void setup() {
-  Serial.begin(921600);
+  Serial.begin(9600);
   pinMode(SOIL_MOISTURE_SENSOR_PIN, INPUT);
 
   Serial.println("DevTITANS Plant.io inicializado.");
@@ -73,9 +73,7 @@ void processCommand(String command) {
     Serial.println(tempC);
   }// LDR = AL
   else if(command == "GET_AL"){
-    int analogValue = analogRead(LDR);
-    Serial.print("RES GET_AL ");
-    Serial.println(analogValue);
+   Serial.println("RES GET_AL " + String(alGetValue(), 2));
   } else if (command.startsWith("POLL_DELAY")) {
     int poll_value = command.substring(11).toInt();
 
@@ -92,6 +90,10 @@ void processCommand(String command) {
 
 float smGetValue() {
   return (map(analogRead(SOIL_MOISTURE_SENSOR_PIN), 0, 4095, 10000, 0) / 100.0);
+}
+
+float alGetValue() {
+  return (map(analogRead(LDR), 0, 4095, 10000, 0) / 100.0);
 }
 
 
