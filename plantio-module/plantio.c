@@ -89,7 +89,7 @@ static void usb_disconnect(struct usb_interface *interface)
 // Envia um comando via USB, espera e retorna a resposta do dispositivo (convertido para long)
 // Exemplo de Comando:  SET_SMI 10000
 // Exemplo de Resposta: RES SET_SMI 1
-static int usb_send_cmd(char *cmd, long param)
+static int usb_send_cmd(char *cmd, int param)
 {
     int recv_size = 0; // Quantidade de caracteres no recv_line
     int ret, actual_size, i;
@@ -101,7 +101,7 @@ static int usb_send_cmd(char *cmd, long param)
     printk(KERN_INFO "Plantio: Enviando comando: %s\n", cmd);
 
     if (param >= 0)
-        sprintf(usb_out_buffer, "%s %Ld\n", cmd, param); // Se param >= 0, o comando possui um parâmetro (float)
+        sprintf(usb_out_buffer, "%s %d\n", cmd, param); // Se param >= 0, o comando possui um parâmetro (float)
     else
         sprintf(usb_out_buffer, "%s\n", cmd); // Caso contrário, é só o comando mesmo
 
@@ -208,7 +208,7 @@ static ssize_t attr_store(struct kobject *sys_obj, struct kobj_attribute *attr, 
         return -EACCES;
     }
 
-    printk(KERN_INFO "Plantio: Setando %s para %Ld ...\n", attr_name, value);
+    printk(KERN_INFO "Plantio: Setando %s para %ld ...\n", attr_name, value);
 
     if (!strcmp(attr_name, "smi"))
         ret = usb_send_cmd("SET_SMI", value);
