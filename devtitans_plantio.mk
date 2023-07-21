@@ -8,4 +8,4 @@ PRODUCT_BRAND := PlantioBrand
 PRODUCT_MODEL := PlantioModel
 
 PRODUCT_PACKAGES +=  \
-	plantio_client
+    plantio_client
