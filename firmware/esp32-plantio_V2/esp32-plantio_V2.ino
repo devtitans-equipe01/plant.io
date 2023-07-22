@@ -54,26 +54,25 @@ void processCommand(String command) {
   command.toUpperCase();
   // Umidade do Solo = SM
   if (command == "GET_SM") {
-    Serial.println("RES GET_SM " + String(smGetValue(), 2));
+    Serial.print("RES GET_SM ");
+    Serial.println(smGetValue(), 0);
   } // Temperatura do Solo = ST
   else if (command == "GET_ST") {
-    sensors.requestTemperatures();
-    float temperatureC = sensors.getTempCByIndex(0);
+    sensors.requestTemperatures();    
     Serial.print("RES GET_ST ");
-    Serial.println(temperatureC);
+    Serial.println(sensors.getTempCByIndex(0) * 100.0,0);
   } // Umidade Ambiente = AM
   else if (command == "GET_AM") {
-    float humi = dht_sensor.readHumidity();
     Serial.print("RES GET_AM ");
-    Serial.println(humi);
+    Serial.println(dht_sensor.readHumidity() * 100.0, 0);
   } // Temperatura Ambiente = AT
   else if (command == "GET_AT") {
-    float tempC = dht_sensor.readTemperature();
     Serial.print("RES GET_AT ");
-    Serial.println(tempC);
+    Serial.println(dht_sensor.readTemperature() * 100.0, 0);
   }// LDR = AL
-  else if(command == "GET_AL"){
-   Serial.println("RES GET_AL " + String(alGetValue(), 2));
+  else if(command == "GET_AL") {
+    Serial.print("RES GET_AL ");
+    Serial.println(alGetValue(), 0);
   } else if (command.startsWith("POLL_DELAY")) {
     int poll_value = command.substring(11).toInt();
 
@@ -88,12 +87,12 @@ void processCommand(String command) {
   }
 }
 
-float smGetValue() {
-  return (map(analogRead(SOIL_MOISTURE_SENSOR_PIN), 0, 4095, 10000, 0) / 100.0);
+int smGetValue() {
+  return map(analogRead(SOIL_MOISTURE_SENSOR_PIN), 0, 4095, 10000, 0);
 }
 
-float alGetValue() {
-  return (map(analogRead(LDR), 0, 4095, 10000, 0) / 100.0);
+int alGetValue() {
+  return map(analogRead(LDR), 0, 4095, 0, 10000);
 }
 
 
