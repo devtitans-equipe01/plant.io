@@ -2,35 +2,33 @@
 #include <DallasTemperature.h>
 #include <DHT.h>
 
-// GPIO Sensor LDR
-#define LDR 36 // ESP32 pin GIOP36 (ADC0)
+// Pinout
 
-// GPIO Sensor DHT11
-#define DHT_SENSOR_PIN  14 // Pino do ESP32 GIOP21 conectado ao sensor DHT11
+#define SOIL_MOISTURE_SENSOR_PIN 34 // SM
+#define DALLAS_ONEWIRE_SENSOR_PIN 21 // ST
+#define DHT_SENSOR_PIN 14 // AM, AT
+#define LDR_SENSOR_PIN 36 // AL
+
+// Config
+
 #define DHT_SENSOR_TYPE DHT11
-DHT dht_sensor(DHT_SENSOR_PIN, DHT_SENSOR_TYPE);
-
-// GPIO Sensor Temperatura do Solo
-const int oneWireBus = 21;
-
-//GPIO Sensor Umidade do Solo
-const int SOIL_MOISTURE_SENSOR_PIN = 34;
-
+DHT DHT11Sensor(DHT_SENSOR_PIN, DHT_SENSOR_TYPE);
 // Configura uma instância OneWire para se comunicar com dispositivos OneWire
-OneWire oneWire(oneWireBus);
-
+OneWire oneWire(DALLAS_ONEWIRE_SENSOR_PIN);
 // Referência oneWire para o sensor de temperatura Dallas
-DallasTemperature sensors(&oneWire);
+DallasTemperature dallasSensor(&oneWire);
 
-int pool_delay = 200;
+#define POLL_DELAY = 200;
 
 void setup() {
-  Serial.begin(9600);
   pinMode(SOIL_MOISTURE_SENSOR_PIN, INPUT);
+  pinMode(LDR_SENSOR_PIN, INPUT);
 
+  dallasSensor.begin();
+  DHT11Sensor.begin();
+
+  Serial.begin(9600);
   Serial.println("DevTITANS Plant.io inicializado.");
-  sensors.begin();
-  dht_sensor.begin();
 }
 
 void loop() {
@@ -46,43 +44,30 @@ void loop() {
     }
   }
 
-  delay(pool_delay);
+  delay(POLL_DELAY);
 }
 
 void processCommand(String command) {
   command.trim();
   command.toUpperCase();
-  // Umidade do Solo = SM
-  if (command == "GET_SM") {
-    Serial.print("RES GET_SM ");
-    Serial.println(smGetValue(), 0);
-  } // Temperatura do Solo = ST
-  else if (command == "GET_ST") {
-    sensors.requestTemperatures();    
-    Serial.print("RES GET_ST ");
-    Serial.println(sensors.getTempCByIndex(0) * 100.0,0);
-  } // Umidade Ambiente = AM
-  else if (command == "GET_AM") {
-    Serial.print("RES GET_AM ");
-    Serial.println(dht_sensor.readHumidity() * 100.0, 0);
-  } // Temperatura Ambiente = AT
-  else if (command == "GET_AT") {
-    Serial.print("RES GET_AT ");
-    Serial.println(dht_sensor.readTemperature() * 100.0, 0);
-  }// LDR = AL
-  else if(command == "GET_AL") {
-    Serial.print("RES GET_AL ");
-    Serial.println(alGetValue(), 0);
-  } else if (command.startsWith("POLL_DELAY")) {
-    int poll_value = command.substring(11).toInt();
 
-    if (poll_value >= 100) {
-      pool_delay = poll_value;
-      Serial.printf("RES POLL_DELAY %d\n", poll_value);
-    } else {
-      Serial.printf("RES POLL_DELAY -1\n");
-    }
-  } else {
+  if (command == "GET_SM") {
+    Serial.printf("RES GET_SM %d\n", smGetValue());
+  }
+  else if (command == "GET_ST") {
+    dallasSensor.requestTemperatures();    
+    Serial.printf("RES GET_ST %d\n", stGetValue());
+  } 
+  else if (command == "GET_AM") {
+    Serial.printf("RES GET_AM %d\n", amGetValue());
+  }
+  else if (command == "GET_AT") {
+    Serial.printf("RES GET_AT %d\n", atGetValue());
+  }
+  else if(command == "GET_AL") {
+    Serial.printf("RES GET_AL %d\n", alGetValue());
+  }
+  else {
     Serial.println("ERR Unknown command.");
   }
 }
@@ -91,8 +76,21 @@ int smGetValue() {
   return map(analogRead(SOIL_MOISTURE_SENSOR_PIN), 0, 4095, 10000, 0);
 }
 
-int alGetValue() {
-  return map(analogRead(LDR), 0, 4095, 0, 10000);
+int stGetValue() {
+  return (int)(dallasSensor.getTempCByIndex(0) * 100);
 }
+
+int amGetValue() {
+  return (int)(DHT11Sensor.readHumidity() * 100);
+}
+
+int atGetValue() {
+  return (int)(DHT11Sensor.readTemperature() * 100);
+}
+
+int alGetValue() {
+  return map(analogRead(LDR_SENSOR_PIN), 0, 4095, 0, 10000);
+}
+
 
 
