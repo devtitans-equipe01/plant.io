@@ -18,7 +18,7 @@ OneWire oneWire(DALLAS_ONEWIRE_SENSOR_PIN);
 // Referência oneWire para o sensor de temperatura Dallas
 DallasTemperature dallasSensor(&oneWire);
 
-#define POLL_DELAY = 200;
+#define POLL_DELAY 200
 
 void setup() {
   pinMode(SOIL_MOISTURE_SENSOR_PIN, INPUT);
