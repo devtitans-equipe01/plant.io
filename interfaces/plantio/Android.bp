@@ -1,0 +1,20 @@
+aidl_interface {
+    name:      "devtitans.plantio",
+    vendor:    true,
+    srcs:      [ "devtitans/plantio/*.aidl" ],
+    stability: "vintf",
+    owner:     "DevTITANS",
+
+    backend: {
+        cpp: {
+            enabled: true,
+        },
+        java: {
+            enabled: true,
+            sdk_version: "module_current",
+        },
+        ndk: {
+            enabled: true,
+        },
+    },
+}
