@@ -10,6 +10,17 @@ PRODUCT_MODEL := PlantioModel
 PRODUCT_PACKAGES +=  \
     plantio_client
 
+BOARD_SEPOLICY_DIRS += device/devtitans/plantio/sepolicy
+
+PRODUCT_SYSTEM_PROPERTIES += \
+    ro.devtitans.name=Plantio
+
+PRODUCT_PRODUCT_PROPERTIES += \
+    ro.product.devtitans.version=1.0
+
+PRODUCT_VENDOR_PROPERTIES += \
+    ro.vendor.devtitans.hardware=ModelB
+
 # Plantio AIDL Interface
 PRODUCT_PACKAGES += devtitans.plantio
 

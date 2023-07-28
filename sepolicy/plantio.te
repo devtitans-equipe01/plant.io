@@ -15,6 +15,10 @@ add_service(plantio_daemon, plantio_service)             # O daemon irá criar o
 # Permite acesso aos arquivos do /sys
 allow plantio_daemon sysfs:file { getattr open read write };
 
+# Cria e Permite leitura da propriedades de sistema do plantio
+vendor_public_prop(vendor_plantio_prop)
+allow plantio_daemon vendor_plantio_prop:file { open getattr map read };
+
 # Permite que apps privilegiados acessem o daemon e o serviço
 allow platform_app plantio_daemon:binder call;
 allow platform_app plantio_service:service_manager find;
