@@ -1,0 +1,4 @@
+# Define o rótulo do daemon plantio
+/vendor/bin/hw/devtitans.plantio-service  u:object_r:plantio_daemon_exec:s0
+
+    

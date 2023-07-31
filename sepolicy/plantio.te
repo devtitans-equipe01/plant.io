@@ -1,0 +1,28 @@
+# Cria o tipo/rótulo do serviço AIDL (rotulado no arquivo service_contexts)
+type plantio_service, service_manager_type, vendor_service;
+
+# Cria o tipo/rótulo do daemon (rotulado no arquivo file_contexts)
+type plantio_daemon, domain;
+type plantio_daemon_exec, exec_type, vendor_file_type, file_type;
+
+# Permissões
+init_daemon_domain(plantio_daemon);                        # O daemon será iniciado pelo init
+vndbinder_use(plantio_daemon);                             # O daemon usará o binder
+allow plantio_daemon servicemanager:binder { call transfer };
+
+add_service(plantio_daemon, plantio_service)             # O daemon irá criar o serviço do plantio
+
+# Permite acesso aos arquivos do /sys
+allow plantio_daemon sysfs:file { getattr open read write };
+
+# Cria e Permite leitura da propriedades de sistema do plantio
+vendor_public_prop(vendor_plantio_prop)
+allow plantio_daemon vendor_plantio_prop:file { open getattr map read };
+
+# Permite que apps privilegiados acessem o daemon e o serviço
+allow platform_app plantio_daemon:binder call;
+allow platform_app plantio_service:service_manager find;
+
+# Permite que apps normais acessem o daemon e o serviço
+allow untrusted_app plantio_daemon:binder call;
+allow untrusted_app plantio_service:service_manager find;
