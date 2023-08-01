@@ -32,3 +32,6 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := device/devtitans/plantio/device_fr
 
 PRODUCT_PACKAGES += plantio_service_client
 
+# Manager
+PRODUCT_PACKAGES += devtitans.plantiomanager
+
