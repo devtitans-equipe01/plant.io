@@ -1,0 +1,3 @@
+# Define o rótulo do serviço AIDL plantio
+devtitans.plantio.IPlantio/default  u:object_r:plantio_service:s0
+

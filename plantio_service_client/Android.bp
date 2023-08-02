@@ -1,0 +1,9 @@
+cc_binary {
+    name: "plantio_service_client",
+    srcs: ["plantio_service_client.cpp"],
+    vendor: true,
+    shared_libs: [
+        "libbinder_ndk",
+        "devtitans.plantio-V1-ndk",
+    ]
+}
