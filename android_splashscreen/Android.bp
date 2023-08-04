@@ -1,0 +1,19 @@
+android_library_import {
+    name: "androidx.core_splashscreen_no-deps",
+    aars: ["core-splashscreen-1.0.0.aar"],
+    sdk_version: "33",
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    min_sdk_version: "33",
+}
+
+android_library {
+    name: "androidx.core_splashscreen",
+    sdk_version: "33",
+    min_sdk_version: "33",
+    manifest: "manifests/AndroidManifest.xml",
+    static_libs: ["androidx.core_splashscreen_no-deps"],
+    java_version: "1.7",
+}
