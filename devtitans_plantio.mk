@@ -35,3 +35,4 @@ PRODUCT_PACKAGES += plantio_service_client
 # Manager
 PRODUCT_PACKAGES += devtitans.plantiomanager
 
+PRODUCT_PACKAGES += PlantioApp
