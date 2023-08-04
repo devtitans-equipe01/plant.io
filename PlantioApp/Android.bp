@@ -1,17 +1,18 @@
 android_app {
     name: "PlantioApp",
 
-    srcs:          [ "app/src/**/*.java" ],
+    srcs:          [ "app/src/**/*.java", "app/src/**/*.kt"],
     resource_dirs: [ "app/src/main/res" ],
     static_libs:   [
         "com.google.android.material_material",
         "androidx-constraintlayout_constraintlayout",
+        "androidx.appcompat_appcompat",
+        "androidx.core_splashscreen",
         "androidx.test.ext.junit",
         "androidx.test.espresso.core",
-	"androidx.core_splashscreen"
+        "androidx.core_core"
     ],
-
-    system_ext_specific: true,                           // O App será instalado na partição system_ext
+    system_ext_specific: true,
     platform_apis:       true,                           // Permite usar APIs escondidas ("@hide")
     certificate:         "platform",                     // Necessário para uma aplicação do sistema
     use_embedded_native_libs: true,
