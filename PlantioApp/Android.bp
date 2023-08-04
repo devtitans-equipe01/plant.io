@@ -4,6 +4,7 @@ android_app {
     srcs:          [ "app/src/**/*.java", "app/src/**/*.kt"],
     resource_dirs: [ "app/src/main/res" ],
     static_libs:   [
+        "devtitans.plantio-V1-java", 
         "com.google.android.material_material",
         "androidx-constraintlayout_constraintlayout",
         "androidx.appcompat_appcompat",
