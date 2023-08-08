@@ -7,7 +7,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "devtitans.plantioapp"
+        applicationId "br.edu.icomp.plantioapp"
         minSdk 33
         targetSdk 33
         versionCode 1
