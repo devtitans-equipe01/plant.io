@@ -46,5 +46,5 @@ dependencies {
     implementation "androidx.core:core-splashscreen:1.0.0"
     implementation 'androidx.fragment:fragment-ktx:1.6.1'
 
-//    implementation files('/home/devtitans-1/aosp/out/soong/.intermediates/device/devtitans/plantio/PlantioManager/devtitans.plantiomanager/android_common/javac/devtitans.plantiomanager.jar')
+    implementation files('/home/devtitans-1/aosp/out/soong/.intermediates/device/devtitans/plantio/PlantioManager/devtitans.plantiomanager/android_common/javac/devtitans.plantiomanager.jar')
 }
