@@ -11,4 +11,5 @@
     <color name="brown_700">#964B00</color>
     <color name="brown_100">#d2b48c</color>
     <color name="skyblue">#87ceeb</color>
+    <color name="ic_launcher_background">#FFFFFFFF</color>
 </resources>
