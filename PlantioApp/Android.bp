@@ -1,3 +1,8 @@
+java_import{
+    name: "manager",
+    jars: ["libs/devtitans.plantiomanager.jar"],
+}
+
 android_app {
     name: "PlantioApp",
 
@@ -8,14 +13,15 @@ android_app {
         "com.google.android.material_material",
         "androidx-constraintlayout_constraintlayout",
         "androidx.appcompat_appcompat",
-        "androidx.core_splashscreen",
         "androidx.test.ext.junit",
         "androidx.test.espresso.core",
-        "androidx.core_core"
+        "androidx.core_core",
+        "manager",
+	"androidx.fragment_fragment",
     ],
+    manifest:    "app/src/main/AndroidManifest.xml",
     system_ext_specific: true,
     platform_apis:       true,                           // Permite usar APIs escondidas ("@hide")
     certificate:         "platform",                     // Necessário para uma aplicação do sistema
     use_embedded_native_libs: true,
-    manifest: "app/src/main/AndroidManifest.xml",
 }

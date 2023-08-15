@@ -5,19 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import br.edu.icomp.plantioapp.databinding.FragmentMainBinding
+import br.edu.icomp.plantioapp.R
+import devtitans.plantiomanager.PlantioManager;
 
 class MainFragment : Fragment() {
 
-    private lateinit var binding : FragmentMainBinding
-
+    private lateinit var  manager : PlantioManager
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.fragment_main,container,false)
     }
 
     override fun onResume() {
