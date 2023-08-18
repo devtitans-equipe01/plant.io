@@ -41,6 +41,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation "androidx.core:core-splashscreen:1.0.0"
     implementation 'androidx.fragment:fragment-ktx:1.6.1'
-
-//    implementation files('/home/devtitans-1/aosp/out/soong/.intermediates/device/devtitans/plantio/PlantioManager/devtitans.plantiomanager/android_common/javac/devtitans.plantiomanager.jar')
 }
