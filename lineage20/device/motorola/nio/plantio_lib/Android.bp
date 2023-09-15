@@ -1,0 +1,15 @@
+cc_library {
+    name:        "plantio_lib",
+    srcs:        [ "*.cpp" ],
+    export_include_dirs: [ "." ],                       // Exporta o nosso include para os módulos dependem de nós
+
+    // Necessário para o GetBoolProperty
+    shared_libs: [ "libbase" ],
+    // Usa os includes do libbase
+    header_libs: [ "libbase_headers" ],
+    // Exporta os includes do libbase para os módulos que dependem de nós
+    export_header_lib_headers: ["libbase_headers"],
+
+    installable: true,
+    vendor:      true
+}

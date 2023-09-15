@@ -1,0 +1,5 @@
+service devtitans.plantio-service /vendor/bin/hw/devtitans.plantio-service
+        interface aidl devtitans.plantio.IPlantio/default
+        class hal
+        user root
+        group root

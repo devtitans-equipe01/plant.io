@@ -1,0 +1,7 @@
+config PLANTIO
+ tristate "Plantio module"
+ default m
+ depends on MODULES
+ help
+   Plantio is a test device used in DevTITANS course.
+   
