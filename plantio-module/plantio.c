@@ -6,6 +6,12 @@ MODULE_AUTHOR("DevTITANS <devtitans@icomp.ufam.edu.br>");
 MODULE_DESCRIPTION("Driver de acesso ao Plant.io (ESP32 com Chip Serial CP2102)");
 MODULE_LICENSE("GPL");
 
+static DEFINE_MUTEX(sm_mutex);
+static DEFINE_MUTEX(st_mutex);
+static DEFINE_MUTEX(am_mutex);
+static DEFINE_MUTEX(at_mutex);
+static DEFINE_MUTEX(al_mutex);
+
 // Tamanho máximo de uma linha de resposta do dispositvo USB
 #define MAX_RECV_LINE 100
 
@@ -164,72 +170,93 @@ static int usb_send_cmd(char *cmd, int param)
 // Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é lido (e.g., cat /sys/kernel/plantio/sm)
 static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff)
 {
-    int value;
+    int value = 0;
     const char *attr_name = attr->attr.name;
+    int ret = 0;
 
-    printk(KERN_INFO "Plantio: Lendo %s ...\n", attr_name);
-
+    // Determina qual mutex usar com base no atributo solicitado
+    struct mutex *attr_mutex = NULL;
     if (!strcmp(attr_name, "sm"))
-        value = usb_send_cmd("GET_SM", -1);
-    else if (!strcmp(attr_name, "smi"))
-        value = usb_send_cmd("GET_SMI", -1);
+        attr_mutex = &sm_mutex;
     else if (!strcmp(attr_name, "st"))
-        value = usb_send_cmd("GET_ST", -1);
-    else if (!strcmp(attr_name, "sti"))
-        value = usb_send_cmd("GET_STI", -1);
+        attr_mutex = &st_mutex;
     else if (!strcmp(attr_name, "am"))
-        value = usb_send_cmd("GET_AM", -1);
-    else if (!strcmp(attr_name, "ami"))
-        value = usb_send_cmd("GET_AMI", -1);
+        attr_mutex = &am_mutex;
     else if (!strcmp(attr_name, "at"))
-        value = usb_send_cmd("GET_AT", -1);
-    else if (!strcmp(attr_name, "ati"))
-        value = usb_send_cmd("GET_ATI", -1);
+        attr_mutex = &at_mutex;
     else if (!strcmp(attr_name, "al"))
-        value = usb_send_cmd("GET_AL", -1);
-    else
-        value = usb_send_cmd("GET_ALI", -1);
+        attr_mutex = &al_mutex;
+    else {
+        // Caso o nome do atributo seja inválido, retorna um erro
+        printk(KERN_ALERT "Plantio: Atributo inválido: %s\n", attr_name);
+        return -EINVAL;
+    }
 
-    // Cria a mensagem com o valor do sm, st ou am, etc...
-    sprintf(buff, "%d\n", value);
-    return strlen(buff);
+    // Bloqueia o mutex correspondente
+    mutex_lock(attr_mutex);
+
+    // Lê o valor do dispositivo
+    value = usb_send_cmd(attr_name, -1);
+    if (value >= 0) {
+        ret = snprintf(buff, PAGE_SIZE, "%d\n", value);
+    } else {
+        // Em caso de erro ao ler do dispositivo
+        ret = -EIO;
+    }
+
+    // Libera o mutex
+    mutex_unlock(attr_mutex);
+
+    return ret;
 }
 
 // Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é escrito (e.g., echo "1000" | sudo tee -a /sys/kernel/plantio/sm)
 static ssize_t attr_store(struct kobject *sys_obj, struct kobj_attribute *attr, const char *buff, size_t count)
 {
-    long ret, value;
+    long value;
     const char *attr_name = attr->attr.name;
+    int ret = 0;
 
+    // Converte o valor do buffer para long
     ret = kstrtol(buff, 10, &value);
-    if (ret)
-    {
-        printk(KERN_ALERT "Plantio: valor de %s invalido.\n", attr_name);
-        return -EACCES;
+    if (ret) {
+        // Em caso de erro ao converter o valor
+        printk(KERN_ALERT "Plantio: Valor inválido para %s: %s\n", attr_name, buff);
+        return ret;
     }
 
-    printk(KERN_INFO "Plantio: Setando %s para %ld ...\n", attr_name, value);
-
+    // Determina qual mutex usar com base no atributo solicitado
+    struct mutex *attr_mutex = NULL;
     if (!strcmp(attr_name, "smi"))
-        ret = usb_send_cmd("SET_SMI", value);
+        attr_mutex = &sm_mutex;
     else if (!strcmp(attr_name, "sti"))
-        ret = usb_send_cmd("SET_STI", value);
+        attr_mutex = &st_mutex;
     else if (!strcmp(attr_name, "ami"))
-        ret = usb_send_cmd("SET_AMI", value);
+        attr_mutex = &am_mutex;
     else if (!strcmp(attr_name, "ati"))
-        ret = usb_send_cmd("SET_ATI", value);
+        attr_mutex = &at_mutex;
     else if (!strcmp(attr_name, "ali"))
-        ret = usb_send_cmd("SET_ALI", value);
-    else
-    {
-        printk(KERN_ALERT "Plantio: os dados dos sensores sao apenas para leitura.\n");
-        return -EACCES;
-    }
-    if (ret < 0)
-    {
-        printk(KERN_ALERT "Plantio: erro ao setar o valor do %s.\n", attr_name);
-        return -EACCES;
+        attr_mutex = &al_mutex;
+    else {
+        // Caso o nome do atributo seja inválido, retorna um erro
+        printk(KERN_ALERT "Plantio: Atributo inválido: %s\n", attr_name);
+        return -EINVAL;
     }
 
-    return strlen(buff);
+    // Bloqueia o mutex correspondente
+    mutex_lock(attr_mutex);
+
+    // Envia o comando para o dispositivo
+    ret = usb_send_cmd(attr_name, value);
+    if (ret >= 0) {
+        ret = count; // Retorna o número de bytes lidos do buffer
+    } else {
+        // Em caso de erro ao enviar o comando para o dispositivo
+        ret = -EIO;
+    }
+
+    // Libera o mutex
+    mutex_unlock(attr_mutex);
+
+    return ret;
 }
