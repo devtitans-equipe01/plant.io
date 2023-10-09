@@ -163,23 +163,9 @@ static int usb_send_cmd(char *cmd, int param)
     return -1; // Não recebi a resposta esperada do dispositivo
 }
 
-static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff)
-{
-    int value = 0;
-    const char *attr_name = attr->attr.name;
-    int ret = 0;
-
-    mutex_lock(&access_mutex); // Bloqueia o acesso enquanto um arquivo está aberto
-
-    // Restante da função
-
-    mutex_unlock(&access_mutex); // Libera o acesso após a leitura
-
-    return ret;
-}
 
 // Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é lido (e.g., cat /sys/kernel/plantio/sm)
-static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff)
+static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff)  
 {
     int value;
     const char *attr_name = attr->attr.name;
