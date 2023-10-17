@@ -28,7 +28,7 @@ void setup() {
   DHT11Sensor.begin();
 
   Serial.begin(9600);
-  Serial.println("DevTITANS Plant.io inicializado.");
+  Serial.printf("DevTITANS Plant.io inicializado.\n");
 }
 
 void loop() {
@@ -51,25 +51,19 @@ void processCommand(String command) {
   command.trim();
   command.toUpperCase();
 
-  if (command == "GET_SM") {
-    Serial.printf("RES GET_SM %d\n", smGetValue());
-  }
-  else if (command == "GET_ST") {
-    dallasSensor.requestTemperatures();    
-    Serial.printf("RES GET_ST %d\n", stGetValue());
-  } 
-  else if (command == "GET_AM") {
-    Serial.printf("RES GET_AM %d\n", amGetValue());
-  }
-  else if (command == "GET_AT") {
-    Serial.printf("RES GET_AT %d\n", atGetValue());
-  }
-  else if(command == "GET_AL") {
-    Serial.printf("RES GET_AL %d\n", alGetValue());
+  if (command == "GET_SENSORS") {
+    Serial.printf("RES GET_SENSORS %s\n", getAllValues().c_str());
   }
   else {
     Serial.println("ERR Unknown command.");
   }
+}
+
+String getAllValues() {
+  // Construa a string com os resultados separados por espaço
+  String stringValue = String(smGetValue()) + " " + String(stGetValue()) + " " + String(amGetValue()) + " " + String(atGetValue()) + " " + String(alGetValue());
+  
+  return stringValue;
 }
 
 int smGetValue() {
@@ -91,6 +85,3 @@ int atGetValue() {
 int alGetValue() {
   return map(analogRead(LDR_SENSOR_PIN), 0, 4095, 0, 10000);
 }
-
-
-
