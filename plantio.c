@@ -1,6 +1,7 @@
 #include <linux/module.h>
 #include <linux/usb.h>
 #include <linux/slab.h>
+#include <linux/mutex.h>
 
 MODULE_AUTHOR("DevTITANS <devtitans@icomp.ufam.edu.br>");
 MODULE_DESCRIPTION("Driver de acesso ao Plant.io (ESP32 com Chip Serial CP2102)");
@@ -8,13 +9,14 @@ MODULE_LICENSE("GPL");
 
 // Tamanho máximo de uma linha de resposta do dispositvo USB
 #define MAX_RECV_LINE 100
+static DEFINE_MUTEX(access_mutex);
 
 // Executado quando o dispositivo é conectado na USB
 static int usb_probe(struct usb_interface *ifce, const struct usb_device_id *id);
 // Executado quando o dispositivo USB é desconectado da USB
 static void usb_disconnect(struct usb_interface *ifce);
 // Envia um comando via USB e espera/retorna a resposta do dispositivo (int)
-static char* usb_send_cmd(char *cmd, int param);
+static int usb_send_cmd(char *cmd, int param);
 // Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é lido (e.g., cat /sys/kernel/plantio/sm)
 static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff);
 // Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é escrito (e.g., echo "1000" | sudo tee -a /sys/kernel/plantio/sm)
@@ -27,9 +29,13 @@ static char *usb_in_buffer, *usb_out_buffer; // Buffers de entrada e saída da U
 static int usb_max_size;                     // Tamanho máximo de uma mensagem USB
 
 // Variáveis para criar os arquivos no /sys/kernel/plantio/{sm, st, am, at, al}
-static struct kobj_attribute sensors_attribute = __ATTR(sm, S_IRUGO | S_IWUSR, attr_show, attr_store);
+static struct kobj_attribute sm_attribute = __ATTR(sm, S_IRUGO | S_IWUSR, attr_show, attr_store);
+static struct kobj_attribute st_attribute = __ATTR(st, S_IRUGO | S_IWUSR, attr_show, attr_store);
+static struct kobj_attribute am_attribute = __ATTR(am, S_IRUGO | S_IWUSR, attr_show, attr_store);
+static struct kobj_attribute at_attribute = __ATTR(at, S_IRUGO | S_IWUSR, attr_show, attr_store);
+static struct kobj_attribute al_attribute = __ATTR(al, S_IRUGO | S_IWUSR, attr_show, attr_store);
 
-static struct attribute *attrs[] = {&sensors_attribute.attr, NULL};
+static struct attribute *attrs[] = {&sm_attribute.attr, &st_attribute.attr, &am_attribute.attr, &at_attribute.attr, &al_attribute.attr, NULL};
 static struct attribute_group attr_group = {.attrs = attrs};
 static struct kobject *sys_obj;
 
@@ -85,7 +91,7 @@ static void usb_disconnect(struct usb_interface *interface)
 // Envia um comando via USB, espera e retorna a resposta do dispositivo (convertido para long)
 // Exemplo de Comando:  SET_SMI 10000
 // Exemplo de Resposta: RES SET_SMI 1
-static char* usb_send_cmd(char *cmd, int param)
+static int usb_send_cmd(char *cmd, int param)
 {
     int recv_size = 0; // Quantidade de caracteres no recv_line
     int ret, actual_size, i;
@@ -106,7 +112,7 @@ static char* usb_send_cmd(char *cmd, int param)
     if (ret)
     {
         printk(KERN_ERR "Plantio: Erro de codigo %d ao enviar comando!\n", ret);
-        return "-1";
+        return -1;
     }
 
     sprintf(resp_expected, "RES %s", cmd); // Resposta esperada. Ficará lendo linhas até receber essa resposta.
@@ -139,7 +145,7 @@ static char* usb_send_cmd(char *cmd, int param)
                     resp_pos = &recv_line[strlen(resp_expected) + 1];
                     ignore = kstrtol(resp_pos, 10, &resp_number);
 
-                    return resp_pos;
+                    return resp_number;
                 }
                 else
                 { // Não é a linha que estávamos esperando. Pega a próxima.
@@ -154,23 +160,46 @@ static char* usb_send_cmd(char *cmd, int param)
             }
         }
     }
-    return "-1"; // Não recebi a resposta esperada do dispositivo
+    return -1; // Não recebi a resposta esperada do dispositivo
 }
 
+
 // Executado quando o arquivo /sys/kernel/plantio/{sm, st, am, at, al} é lido (e.g., cat /sys/kernel/plantio/sm)
-static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff)
+static ssize_t attr_show(struct kobject *sys_obj, struct kobj_attribute *attr, char *buff)  
 {
-    char *value;
+    int value;
     const char *attr_name = attr->attr.name;
 
     printk(KERN_INFO "Plantio: Lendo %s ...\n", attr_name);
+    mutex_lock(&access_mutex);
 
-    if (!strcmp(attr_name, "sensors")) {
-        value = usb_send_cmd("GET_SENSORS", -1);
-    }
+    if (!strcmp(attr_name, "sm"))
+        value = usb_send_cmd("GET_SM", -1);
+    else if (!strcmp(attr_name, "smi"))
+        value = usb_send_cmd("GET_SMI", -1);
+    else if (!strcmp(attr_name, "st"))
+        value = usb_send_cmd("GET_ST", -1);
+    else if (!strcmp(attr_name, "sti"))
+        value = usb_send_cmd("GET_STI", -1);
+    else if (!strcmp(attr_name, "am"))
+        value = usb_send_cmd("GET_AM", -1);
+    else if (!strcmp(attr_name, "ami"))
+        value = usb_send_cmd("GET_AMI", -1);
+    else if (!strcmp(attr_name, "at"))
+        value = usb_send_cmd("GET_AT", -1);
+    else if (!strcmp(attr_name, "ati"))
+        value = usb_send_cmd("GET_ATI", -1);
+    else if (!strcmp(attr_name, "al"))
+        value = usb_send_cmd("GET_AL", -1);
+    else
+        value = usb_send_cmd("GET_ALI", -1);
 
     // Cria a mensagem com o valor do sm, st ou am, etc...
-    sprintf(buff, "%s\n", value);
+    sprintf(buff, "%d\n", value);
+
+    mutex_unlock(&access_mutex);
+
+
     return strlen(buff);
 }
 
@@ -187,15 +216,32 @@ static ssize_t attr_store(struct kobject *sys_obj, struct kobj_attribute *attr, 
         return -EACCES;
     }
 
-    // printk(KERN_INFO "Plantio: Setando %s para %ld ...\n", attr_name, value);
-    printk(KERN_ALERT "Plantio: os dados dos sensores sao apenas para leitura.\n");
-    return -EACCES;
-    
+    mutex_lock(&access_mutex);
+    printk(KERN_INFO "Plantio: Setando %s para %ld ...\n", attr_name, value);
+
+    if (!strcmp(attr_name, "smi"))
+        ret = usb_send_cmd("SET_SMI", value);
+    else if (!strcmp(attr_name, "sti"))
+        ret = usb_send_cmd("SET_STI", value);
+    else if (!strcmp(attr_name, "ami"))
+        ret = usb_send_cmd("SET_AMI", value);
+    else if (!strcmp(attr_name, "ati"))
+        ret = usb_send_cmd("SET_ATI", value);
+    else if (!strcmp(attr_name, "ali"))
+        ret = usb_send_cmd("SET_ALI", value);
+    else
+    {
+        printk(KERN_ALERT "Plantio: os dados dos sensores sao apenas para leitura.\n");
+        return -EACCES;
+    }
     if (ret < 0)
     {
         printk(KERN_ALERT "Plantio: erro ao setar o valor do %s.\n", attr_name);
         return -EACCES;
     }
 
+    mutex_unlock(&access_mutex);
+
     return strlen(buff);
 }
+
