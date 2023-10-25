@@ -1,0 +1,8 @@
+service vendor.light /vendor/bin/hw/android.hardware.lights-service.motokona
+    class hal
+    user system
+    group system
+    shutdown critical
+
+on boot
+    chown system system /sys/class/leds/charging/brightness

@@ -1,0 +1,2 @@
+# Permite acesso aos arquivos do /sys
+allow hal_sensors_default sysfs:file { getattr open read write };
